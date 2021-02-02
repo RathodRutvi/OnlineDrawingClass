@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class StudentsController extends Controller
+class WarilyArtModuleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,7 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        $students= DB::table('students')->get();
-        return view('admin.view',compact('students'));
-       
+        return view('admin.warilymoduladd');
     }
 
     /**
@@ -26,7 +24,7 @@ class StudentsController extends Controller
      */
     public function create()
     {
-        //return view('layout.registration');
+        //
     }
 
     /**
@@ -37,20 +35,13 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-        $flag=DB::table('students')
-        ->insert(["students_name"=>$request->students_name,
-        "students_email"=>$request->students_email,
-        "students_standard"=>$request->students_standard,
-        "students_birthday"=>$request->students_birthday,
-        "students_city"=>$request->students_city,
-        "students_address"=>$request->students_address,
-        "students_phone"=>$request->students_phone,
-        "students_course"=>$request->students_course,
-        "students_fee"=>$request->students_fee,
-        "password"=>$request->password]);
+        
+        $flag=DB::table('warilyart')->insert(["module"=>$request->module,
+        "Description"=>$request->Description,
+        "image"=>$request->image]);
         if($flag)
         {
-            return redirect('login');
+            return redirect()->back()->with('warilymoduladd');
            
         }
         else
@@ -58,31 +49,8 @@ class StudentsController extends Controller
          return  "not succes";
         }
 
-
-
     }
-    public function submit_warily_work(request $request){
-        
-        $student_id=$request->student_id;
-        $arts=DB::table('warilyart')->select("module","Description","image")->get();
-       
-        if($request->file){
-            
-            $file_name=$request->file;
-            $filename = time().'.'.$file_name->getClientOriginalExtension();
-            $file_name->move(public_path('students work'), $filename);
 
-            $flag=DB::table('students_work')
-            ->insert(["student_id"=>$request->student_id,
-            "module"=>1,
-            "image"=>$filename,
-            ]);
-            
-        }
-       // return view('signin',compact('arts','student_id'));
-       
-        return view('layout.warilyart',compact('arts','student_id'));
-    }
     /**
      * Display the specified resource.
      *
@@ -127,4 +95,6 @@ class StudentsController extends Controller
     {
         //
     }
+    
+    
 }
